@@ -3,7 +3,7 @@ factor. Accepted values for BF are {-1, 0, 1}. If the values are exceeded then r
 the tree. BF = {Height of LSubtree - Height of RSubtree }
 """
 import sys
-import graphviz
+#import graphviz
 
 class TreeNode:
     def __init__(self, data):
@@ -27,20 +27,92 @@ class AVLTree:
 
         if balanceFactor > 1:
             if data < root.left.data:
-                return self.rightRotate(root)
+                #return self.rightRotate(root)
+                return self.LLRotate(root)
             else:
-                root.left = self.leftRotate(root.left)
-                return self.rightRotate(root)
+                #root.left = self.leftRotate(root.left)
+                return self.LRRotate(root)
+                #return self.rightRotate(root)
         
         if balanceFactor < -1:
             if data > root.right.data:
-                return self.leftRotate(root)
+                #return self.leftRotate(root)
+                return self.RRRotate(root)
             else:
-                root.right = self.rightRotate(root.right)
-                return self.leftRotate(root)
+                #root.right = self.rightRotate(root.right)
+                #return self.leftRotate(root)
+                return self.RLRotate(root)
         
         return root
     
+    def LLRotate(self,node):
+        y = node.left
+        node.left = y.right
+        y.right = node
+
+        node.height = 1 + max(self.getHeight(node.left), self.getHeight(node.right))
+        y.height = 1 + max(self.getHeight(y.left), self.getHeight(y.right))
+
+        return y
+    
+    def RRRotate(self,node):
+        y = node.right
+        node.right = y.left
+        y.left = node
+
+        node.height = 1 + max(self.getHeight(node.left), self.getHeight(node.right))
+        y.height = 1 + max(self.getHeight(y.left), self.getHeight(y.right))
+
+        return y
+    
+    def LRRotate(self,node):
+        y = node.left.right
+        t3 = node.left
+        t3.right = y.left
+        y.left = t3
+        node.left = y.right
+        y.right = node
+
+        node.height = 1 + max(self.getHeight(node.left), self.getHeight(node.right))
+        y.height = 1 + max(self.getHeight(y.left), self.getHeight(y.right))
+
+        return y
+
+    def RLRotate(self,node):
+        y = node.right.left
+        t2 = node.right
+        t2.left = y.right
+        node.right = y.left
+        y.left = node
+        y.right = t2
+
+        node.height = 1 + max(self.getHeight(node.left), self.getHeight(node.right))
+        y.height = 1 + max(self.getHeight(y.left), self.getHeight(y.right))
+
+        return y
+    
+    """
+    def leftRotate(self,z):
+        y = z.right
+        t2 = y.left
+        y.left = z
+        z.right = t2
+        z.height = 1 + max(self.getHeight(z.left),self.getHeight(z.right))
+        y.height = 1 + max(self.getHeight(y.left), self.getHeight(y.right))
+
+        return y
+    
+    def rightRotate(self,z):
+        y = z.left
+        t3 = y.right
+        y.right = z
+        z.left = t3
+        z.height = 1 + max(self.getHeight(z.left), self.getHeight(z.right))
+        z.height = 1 + max(self.getHeight(y.left), self.getHeight(y.right))
+
+    """
+
+
     def getHeight(self, root):
         if not root:
             return 0
@@ -77,7 +149,7 @@ class AVLTree:
 if __name__ == "__main__":
     myTree = AVLTree()
     root = None
-    nums = [33,13,52,9,21,61,8,11]
+    nums = [33,13,52,9,21,61,8,11,5,2,15]
     for num in nums:
         root = myTree.insertNode(root, num)
     
