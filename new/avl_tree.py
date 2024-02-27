@@ -3,7 +3,7 @@ factor. Accepted values for BF are {-1, 0, 1}. If the values are exceeded then r
 the tree. BF = {Height of LSubtree - Height of RSubtree }
 """
 import sys
-#import graphviz
+import graphviz
 
 class TreeNode:
     def __init__(self, data):
@@ -143,8 +143,22 @@ class AVLTree:
             self.printHelper(currPtr.left, indent, False)
             self.printHelper(currPtr.right, indent, False)
         
-    def vizTree(self):
-        pass
+    def vizTree(self,root):
+        dot = graphviz.Digraph()
+        dot.node(str(root.data))
+
+        def add_nodes_edges(node):
+            if node.left:
+                dot.node(str(node.left.data))
+                dot.edge(str(node.data),str(node.left.data))
+                add_nodes_edges(node.left)
+            if node.right:
+                dot.node(str(node.right.data))
+                dot.edge(str(node.data), str(node.right.data))
+                add_nodes_edges(node.right)
+            
+        add_nodes_edges(root)
+        dot.render('AVL_Tree', view=True, format='png')
 
 if __name__ == "__main__":
     myTree = AVLTree()
@@ -153,7 +167,9 @@ if __name__ == "__main__":
     for num in nums:
         root = myTree.insertNode(root, num)
     
-    myTree.printHelper(root," ",True )
+    #myTree.printHelper(root," ",True )
+    #print(root)
+    myTree.vizTree(root)
     
             
             
